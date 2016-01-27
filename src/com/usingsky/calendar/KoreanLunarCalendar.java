@@ -51,6 +51,9 @@ public class KoreanLunarCalendar {
 	private static int SOLAR_BIG_YEAR_DAY = 366;
 	
 	private static int[] SOLAR_DAYS = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 29};
+	private static char[] KOREAN_CHEONGAN = {0xac11, 0xc744, 0xbcd1, 0xc815, 0xbb34, 0xae30, 0xacbd, 0xc2e0, 0xc784, 0xacc4};
+	private static char[] KOREAN_GANJI = {0xc790, 0xcd95, 0xc778, 0xbb18, 0xc9c4, 0xc0ac, 0xc624, 0xbbf8, 0xc2e0, 0xc720, 0xc220, 0xd574};
+	private static char[] KOREAN_GAPJA_UNIT = {0xb144, 0xc6d4, 0xc77c};
 	
 	private static int[] KOREAN_LUNAR_DATA = {
 			0x82c40653, 0xc301c6a9, 0x82c405aa, 0x82c60ab5, 0x830092bd, 0xc2c402b6, 0x82c60c37, 0x82fe552e, 0x82c40c96, 0xc2c60e4b, 
@@ -341,6 +344,30 @@ public class KoreanLunarCalendar {
 					isValid = true;
 				}
 				return isValid;
+			}
+			
+			private String getGapJa(int cheonganInx, int ganjiInx, int unitInx){
+				return String.valueOf(KOREAN_CHEONGAN[cheonganInx]) + String.valueOf(KOREAN_GANJI[ganjiInx]) + String.valueOf(KOREAN_GAPJA_UNIT[unitInx]);
+			}
+			
+			public String getGapjaString() {
+				String gapjaString = "";
+				int absDays = getLunarAbsDays(getLunarYear(), getLunarMonth(), getLunarDay(), isIntercalation());
+				if(absDays > 0){
+					gapjaString += getGapJa(((getLunarYear()+7) - KOREAN_LUNAR_BASE_YEAR) % KOREAN_CHEONGAN.length, 
+							((getLunarYear()+7) - KOREAN_LUNAR_BASE_YEAR) % KOREAN_GANJI.length, 0) + " ";
+					if(!isIntercalation()){
+						int monthCount = getLunarMonth();
+						for(int baseYear = KOREAN_LUNAR_BASE_YEAR; baseYear < getLunarYear(); baseYear++){
+							monthCount += 12;
+						}
+						gapjaString += getGapJa((monthCount+5) % KOREAN_CHEONGAN.length, 
+								(monthCount+1) % KOREAN_GANJI.length, 1) + " ";
+					}
+					gapjaString += getGapJa((absDays+4) % KOREAN_CHEONGAN.length, absDays % KOREAN_GANJI.length, 2);
+				}
+				
+				return gapjaString;
 			}
 			
 			public int getLunarYear() {
