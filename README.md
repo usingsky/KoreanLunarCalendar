@@ -21,7 +21,8 @@ import com.usingsky.calendar.KoreanLunarCalendar
 ```
 
 #### Sample code
-As the script works only with jQuery 1.8 or higher, it is necessary to load the jQuery library first.
+1. 양력 1391년 2월 23일을 음력으로 변환
+2. 음력 1956년 1월 21일을 양력으로 변환
 ```java
 KoreanLunarCalendar klcal = KoreanLunarCalendar.getInstance();
 
