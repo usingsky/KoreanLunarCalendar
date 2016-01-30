@@ -236,7 +236,7 @@ public class KoreanLunarCalendar {
         return days;
     }
     
-    public int getSolarAbsDays(int year, int month, int day){
+    private int getSolarAbsDays(int year, int month, int day){
         int days = 0;
         days = getSolarDayBeforeBaseYear(year-1) + getSolarDaysBeforeBaseMonth(year, month-1) + day;
         days -= SOLAR_LUNAR_DAY_DIFF;
