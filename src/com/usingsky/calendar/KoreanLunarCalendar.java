@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  * 
- * Copyright (c) 2016 usingsky(usingsky@gmail.com)
+ * Copyright (c) 2018 usingsky(usingsky@gmail.com)
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,10 @@ public class KoreanLunarCalendar {
     private int solarMonth = 0;
     private int solarDay = 0;
     
+    private int[] gapjaYearInx = {0, 0, 0};
+    private int[] gapjaMonthInx = {0, 0, 1};
+    private int[] gapjaDayInx = {0, 0, 2};
+    
     private static int KOREAN_LUNAR_MIN_VALUE = 13910101;
     private static int KOREAN_LUNAR_MAX_VALUE = 20501118;
     private static int KOREAN_SOLAR_MIN_VALUE = 13910205;
@@ -55,6 +59,12 @@ public class KoreanLunarCalendar {
     private static char[] KOREAN_GANJI = {0xc790, 0xcd95, 0xc778, 0xbb18, 0xc9c4, 0xc0ac, 0xc624, 0xbbf8, 0xc2e0, 0xc720, 0xc220, 0xd574};
     private static char[] KOREAN_GAPJA_UNIT = {0xb144, 0xc6d4, 0xc77c};
     
+    private static char[] CHINESE_CHEONGAN = {0x7532, 0x4e59, 0x4e19, 0x4e01, 0x620a, 0x5df1, 0x5e9a, 0x8f9b, 0x58ec, 0x7678};
+    private static char[] CHINESE_GANJI = {0x5b50, 0x4e11, 0x5bc5, 0x536f, 0x8fb0, 0x5df3, 0x5348, 0x672a, 0x7533, 0x9149, 0x620c, 0x4ea5};
+    private static char[] CHINESE_GAPJA_UNIT = {0x5e74, 0x6708, 0x65e5};
+    
+    private static char[] INTERCALATION_STR = {0xc724, 0x958f};
+    	    		
     private static int[] KOREAN_LUNAR_DATA = {
             0x82c40653, 0xc301c6a9, 0x82c405aa, 0x82c60ab5, 0x830092bd, 0xc2c402b6, 0x82c60c37, 0x82fe552e, 0x82c40c96, 0xc2c60e4b, 
             0x82fe3752, 0x82c60daa, 0x8301b5b4, 0xc2c6056d, 0x82c402ae, 0x83007a3d, 0x82c40a2d, 0xc2c40d15, 0x83004d95, 0x82c40b52, 
@@ -346,28 +356,86 @@ public class KoreanLunarCalendar {
         return isValid;
     }
     
-    private String getGapJa(int cheonganInx, int ganjiInx, int unitInx){
-        return String.valueOf(KOREAN_CHEONGAN[cheonganInx]) + String.valueOf(KOREAN_GANJI[ganjiInx]) + String.valueOf(KOREAN_GAPJA_UNIT[unitInx]);
+    private void getGapJa(){
+    	int absDays = getLunarAbsDays(lunarYear, lunarMonth, lunarDay, isIntercalation);
+    	if(absDays > 0) {
+    		gapjaYearInx[0] = ((lunarYear + 7) - KOREAN_LUNAR_BASE_YEAR) % KOREAN_CHEONGAN.length;
+    		gapjaYearInx[1] = ((lunarYear + 7) - KOREAN_LUNAR_BASE_YEAR) % KOREAN_GANJI.length;
+    		
+    		int monthCount = this.lunarMonth;
+    		monthCount += 12 * (lunarYear - KOREAN_LUNAR_BASE_YEAR);
+    		gapjaMonthInx[0] = (monthCount + 5) % KOREAN_CHEONGAN.length;
+    		gapjaMonthInx[1] = (monthCount + 1) % KOREAN_GANJI.length;
+    		
+    		gapjaDayInx[0] = (absDays + 4) % KOREAN_CHEONGAN.length;
+    		gapjaDayInx[1] = absDays % KOREAN_GANJI.length;
+    	}
     }
     
     public String getGapjaString() {
-        String gapjaString = "";
-        int absDays = getLunarAbsDays(getLunarYear(), getLunarMonth(), getLunarDay(), isIntercalation());
-        if(absDays > 0){
-            gapjaString += getGapJa(((getLunarYear()+7) - KOREAN_LUNAR_BASE_YEAR) % KOREAN_CHEONGAN.length, 
-                    ((getLunarYear()+7) - KOREAN_LUNAR_BASE_YEAR) % KOREAN_GANJI.length, 0) + " ";
-            if(!isIntercalation()){
-                int monthCount = getLunarMonth();
-                for(int baseYear = KOREAN_LUNAR_BASE_YEAR; baseYear < getLunarYear(); baseYear++){
-                    monthCount += 12;
-                }
-                gapjaString += getGapJa((monthCount+5) % KOREAN_CHEONGAN.length, 
-                        (monthCount+1) % KOREAN_GANJI.length, 1) + " ";
-            }
-            gapjaString += getGapJa((absDays+4) % KOREAN_CHEONGAN.length, absDays % KOREAN_GANJI.length, 2);
-        }
-        
-        return gapjaString;
+    	getGapJa();
+
+    	StringBuilder gapjaString = new StringBuilder();
+    	gapjaString.append(KOREAN_CHEONGAN[gapjaYearInx[0]]);
+    	gapjaString.append(KOREAN_GANJI[gapjaYearInx[1]]);
+    	gapjaString.append(KOREAN_GAPJA_UNIT[gapjaYearInx[2]]);
+    	gapjaString.append(" ");
+    	gapjaString.append(KOREAN_CHEONGAN[gapjaMonthInx[0]]);
+    	gapjaString.append(KOREAN_GANJI[gapjaMonthInx[1]]);
+    	gapjaString.append(KOREAN_GAPJA_UNIT[gapjaMonthInx[2]]);
+    	gapjaString.append(" ");
+    	gapjaString.append(KOREAN_CHEONGAN[gapjaDayInx[0]]);
+    	gapjaString.append(KOREAN_GANJI[gapjaDayInx[1]]);
+    	gapjaString.append(KOREAN_GAPJA_UNIT[gapjaDayInx[2]]);
+    	
+    	if(isIntercalation()) {
+    		gapjaString.append(" (");
+    		gapjaString.append(INTERCALATION_STR[0]);
+    		gapjaString.append(KOREAN_GAPJA_UNIT[1]);
+    		gapjaString.append(")");
+    	}
+        return gapjaString.toString();
+    }
+    
+    public String getChineseGapJaString() {
+    	getGapJa();
+    	
+    	StringBuilder gapjaString = new StringBuilder();
+    	gapjaString.append(CHINESE_CHEONGAN[gapjaYearInx[0]]);
+    	gapjaString.append(CHINESE_GANJI[gapjaYearInx[1]]);
+    	gapjaString.append(CHINESE_GAPJA_UNIT[gapjaYearInx[2]]);
+    	gapjaString.append(" ");
+    	gapjaString.append(CHINESE_CHEONGAN[gapjaMonthInx[0]]);
+    	gapjaString.append(CHINESE_GANJI[gapjaMonthInx[1]]);
+    	gapjaString.append(CHINESE_GAPJA_UNIT[gapjaMonthInx[2]]);
+    	gapjaString.append(" ");
+    	gapjaString.append(CHINESE_CHEONGAN[gapjaDayInx[0]]);
+    	gapjaString.append(CHINESE_GANJI[gapjaDayInx[1]]);
+    	gapjaString.append(CHINESE_GAPJA_UNIT[gapjaDayInx[2]]);
+    	
+    	if(isIntercalation()) {
+    		gapjaString.append(" (");
+    		gapjaString.append(INTERCALATION_STR[1]);
+    		gapjaString.append(CHINESE_GAPJA_UNIT[1]);
+    		gapjaString.append(")");
+    	}
+        return gapjaString.toString();
+    }
+    
+    public String getLunarIsoFormat() {
+    	String isoStr = String.format("%04d-%02d-%02d", lunarYear, lunarMonth, lunarDay);
+    	if(isIntercalation())
+    		isoStr += " Intercalation";
+    	
+    	return isoStr;
+    }
+
+    public String getSolarIsoFormat() {
+    	String isoStr = String.format("%04d-%02d-%02d", solarYear, solarMonth, solarDay);
+    	if(isIntercalation())
+    		isoStr += " Intercalation";
+    	
+    	return isoStr;    	
     }
     
     public int getLunarYear() {
