@@ -425,17 +425,15 @@ public class KoreanLunarCalendar {
     public String getLunarIsoFormat() {
     	String isoStr = String.format("%04d-%02d-%02d", lunarYear, lunarMonth, lunarDay);
     	if(isIntercalation())
-    		isoStr += " Intercalation";
-    	
+    	    isoStr += " Intercalation";
+
     	return isoStr;
     }
 
     public String getSolarIsoFormat() {
     	String isoStr = String.format("%04d-%02d-%02d", solarYear, solarMonth, solarDay);
-    	if(isIntercalation())
-    		isoStr += " Intercalation";
-    	
-    	return isoStr;    	
+
+    	return isoStr;
     }
     
     public int getLunarYear() {
