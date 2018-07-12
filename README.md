@@ -24,32 +24,44 @@ import com.usingsky.calendar.KoreanLunarCalendar
 ```
 
 #### Sample code
-1. 양력 1391년 2월 23일을 음력으로 변환
+1. 양력 2017년 6월 24일을 음력으로 변환
+```java
+KoreanLunarCalendar calendar = KoreanLunarCalendar.getInstance();
+
+// param : year(년), month(월), day(일)
+calendar.setSolarDate(2017, 6, 24);
+
+// Lunar Date (ISO format)
+System.out.println(calendar.getLunarIsoFormat());
+// Korean GapJa String
+System.out.println(calendar.getGapjaString());
+// Chinese GapJa String
+System.out.println(calendar.getChineseGapJaString());
+```
+
+[Result]
+```java
+2017-05-01 Intercalation
+정유년 병오월 임오일 (윤월)
+丁酉年 丙午月 壬午日 (閏月)
+```
+
 2. 음력 1956년 1월 21일을 양력으로 변환
 ```java
-KoreanLunarCalendar klcal = KoreanLunarCalendar.getInstance();
+// param : year(년), month(월), day(일), intercalation(윤달여부)
+calendar.setLunarDate(1956, 1, 21, false);
 
-System.out.println("1. solar date to Korean lunar date");
-klcal.setSolarDate(1393, 2, 23);
-System.out.println("Solar Date : " +klcal.getSolarYear()+". "+klcal.getSolarMonth()+". "+klcal.getSolarDay());
-System.out.println("Korean Lunar Date : " +klcal.getLunarYear()+". "+klcal.getLunarMonth()+". "+klcal.getLunarDay()+" "
-                   +klcal.getGapjaString()+" ("+(klcal.isIntercalation() ? "윤달)" : "평달)"));
-System.out.println("\n2. Korean lunar date to solar date");
-klcal.setLunarDate(1956, 1, 21, false);
-System.out.println("Korean Lunar Date : " +klcal.getLunarYear()+". "+klcal.getLunarMonth()+". "+klcal.getLunarDay()+" "
-      +klcal.getGapjaString()+" ("+(klcal.isIntercalation() ? "윤달)" : "평달)"));
-System.out.println("Solar Date : " +klcal.getSolarYear()+". "+klcal.getSolarMonth()+". "+klcal.getSolarDay());
-
+// Solar Date (ISO format)
+System.out.println(calendar.getSolarIsoFormat());
+// Korean GapJa String
+System.out.println(calendar.getGapjaString());
+// Chinese GapJa String
+System.out.println(calendar.getChineseGapJaString());
 ```
 
-#### Result
-```
-1. solar date to Korean lunar date
-Solar Date : 1393. 2. 23
-Korean Lunar Date : 1393. 1. 12 계유년 갑인월 무오일 (평달)
-
-2. Korean lunar date to solar date
-Korean Lunar Date : 1956. 1. 21 병신년 경인월 기사일 (평달)
-Solar Date : 1956. 3. 3
-
+[Result]
+```java
+1956-03-03
+병신년 경인월 기사일
+丙申年 庚寅月 己巳日
 ```
