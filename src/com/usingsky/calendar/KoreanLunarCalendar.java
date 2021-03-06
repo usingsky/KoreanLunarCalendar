@@ -25,8 +25,6 @@
 package com.usingsky.calendar;
 
 public class KoreanLunarCalendar {
-
-    private static KoreanLunarCalendar mCalendar = null;
     
     private int lunarYear = 0;
     private int lunarMonth = 0;
@@ -134,12 +132,13 @@ public class KoreanLunarCalendar {
             0x82c6096d, 0x8300255b, 0x82c4049b, 0xc3007a57, 0x82c40a4b, 0x82c40b25, 0x83015b25, 0xc2c406d4, 0x82c60ada, 0x830138b6, };
     
     private KoreanLunarCalendar(){}
-    
+
     public static KoreanLunarCalendar getInstance(){
-        if(mCalendar == null){
-            mCalendar = new KoreanLunarCalendar();
-        }
-        return mCalendar;
+        return LazyHolder.INSTANCE;
+    }
+
+    private static class LazyHolder {
+        private static final KoreanLunarCalendar INSTANCE = new KoreanLunarCalendar();
     }
     
     private int getLunarData(int year){
