@@ -38,7 +38,7 @@ Maven
 ```xml
 <dependency>
   <groupId>com.github.usingsky</groupId>
-  <artifactId>korean-lunar-calendar</artifactId>
+  <artifactId>KoreanLunarCalendar</artifactId>
   <version>0.3.1</version>
 </dependency>
 ```
@@ -55,7 +55,7 @@ repositories {
 ```groovy
 dependencies {
     ...
-    compile 'com.github.usingsky:korean-lunar-calendar:0.3.1'
+    compile 'com.github.usingsky:KoreanLunarCalendar:0.3.1'
     ...
 }
 ```
