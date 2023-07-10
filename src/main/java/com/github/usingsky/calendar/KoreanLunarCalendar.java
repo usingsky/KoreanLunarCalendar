@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.usingsky.calendar;
+package com.github.usingsky.calendar;
 
 public class KoreanLunarCalendar {
 
@@ -175,6 +175,9 @@ public class KoreanLunarCalendar {
     private KoreanLunarCalendar() {
     }
 
+    /**
+    * Constructs a KoreanLunarCalendar instance.
+    */
     public static KoreanLunarCalendar getInstance() {
         return LazyHolder.INSTANCE;
     }
@@ -364,6 +367,14 @@ public class KoreanLunarCalendar {
         return isValid;
     }
 
+    /**
+     * 
+     * @param lunarYear
+     * @param lunarMonth
+     * @param lunarDay
+     * @param isIntercalation
+     * @return
+     */
     public boolean setLunarDate(int lunarYear, int lunarMonth, int lunarDay, boolean isIntercalation) {
         boolean isValid = false;
         if (checkValidDate(true, isIntercalation, lunarYear, lunarMonth, lunarDay)) {
@@ -377,6 +388,13 @@ public class KoreanLunarCalendar {
         return isValid;
     }
 
+    /**
+     * 
+     * @param solarYear
+     * @param solarMonth
+     * @param solarDay
+     * @return
+     */
     public boolean setSolarDate(int solarYear, int solarMonth, int solarDay) {
         boolean isValid = false;
         if (checkValidDate(false, false, solarYear, solarMonth, solarDay)) {
@@ -405,6 +423,10 @@ public class KoreanLunarCalendar {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getGapjaString() {
         getGapJa();
 
@@ -430,6 +452,10 @@ public class KoreanLunarCalendar {
         return gapjaString.toString();
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getChineseGapJaString() {
         getGapJa();
 
@@ -455,6 +481,10 @@ public class KoreanLunarCalendar {
         return gapjaString.toString();
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getLunarIsoFormat() {
         String isoStr = String.format("%04d-%02d-%02d", lunarYear, lunarMonth, lunarDay);
         if (isIntercalation())
@@ -463,12 +493,20 @@ public class KoreanLunarCalendar {
         return isoStr;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getSolarIsoFormat() {
         String isoStr = String.format("%04d-%02d-%02d", solarYear, solarMonth, solarDay);
 
         return isoStr;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getLunarYear() {
         return lunarYear;
     }
@@ -477,6 +515,10 @@ public class KoreanLunarCalendar {
         this.lunarYear = lunarYear;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getLunarMonth() {
         return lunarMonth;
     }
@@ -485,6 +527,10 @@ public class KoreanLunarCalendar {
         this.lunarMonth = lunarMonth;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getLunarDay() {
         return lunarDay;
     }
@@ -493,6 +539,10 @@ public class KoreanLunarCalendar {
         this.lunarDay = lunarDay;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isIntercalation() {
         return isIntercalation;
     }
@@ -501,6 +551,10 @@ public class KoreanLunarCalendar {
         this.isIntercalation = isIntercalation;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getSolarYear() {
         return solarYear;
     }
@@ -509,6 +563,10 @@ public class KoreanLunarCalendar {
         this.solarYear = solarYear;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getSolarMonth() {
         return solarMonth;
     }
@@ -516,7 +574,11 @@ public class KoreanLunarCalendar {
     private void setSolarMonth(int solarMonth) {
         this.solarMonth = solarMonth;
     }
-
+    
+    /**
+     * 
+     * @return
+     */
     public int getSolarDay() {
         return solarDay;
     }
